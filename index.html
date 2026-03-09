@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindFlow - Stop Overthinking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px 30px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #1a365d;
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            color: #4a5568;
+            margin-bottom: 30px;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: #1a365d;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon {
+            font-size: 1.8rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input, select {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3182ce;
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+        }
+
+        button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #3182ce 0%, #2c5aa0 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(49, 130, 206, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .activity-item, .reminder-item {
+            background: #f7fafc;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid #3182ce;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideIn 0.3s ease-out;
+            transition: all 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .activity-item:hover, .reminder-item:hover {
+            background: #edf2f7;
+            transform: translateX(5px);
+        }
+
+        .activity-content, .reminder-content {
+            flex: 1;
+        }
+
+        .activity-title, .reminder-title {
+            font-weight: 600;
+            color: #1a365d;
+            margin-bottom: 4px;
+        }
+
+        .activity-time, .reminder-time {
+            font-size: 0.9rem;
+            color: #718096;
+        }
+
+        .delete-btn {
+            background: #fc8181;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            margin-left: 10px;
+            box-shadow: none;
+        }
+
+        .delete-btn:hover {
+            background: #f56565;
+        }
+
+        .complete-btn {
+            background: #68d391;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            margin-left: 10px;
+            box-shadow: none;
+        }
+
+        .complete-btn:hover {
+            background: #48bb78;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px 20px;
+            color: #718096;
+        }
+
+        .empty-state p {
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .suggestions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .suggestion-btn {
+            background: #edf2f7;
+            color: #3182ce;
+            border: 2px solid #3182ce;
+            padding: 10px 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .suggestion-btn:hover {
+            background: #3182ce;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .motivation-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            grid-column: 1 / -1;
+            margin-bottom: 30px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .motivation-section h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .motivation-section p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        .activity-frequency {
+            font-size: 0.85rem;
+            color: #a0aec0;
+            margin-top: 4px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #48bb78;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            animation: slideInRight 0.3s ease-out;
+            z-index: 1000;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .reminder-badge {
+            display: inline-block;
+            background: #fed7d7;
+            color: #c53030;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧠 MindFlow</h1>
+            <p class="tagline">Your personal companion to stop overthinking. Build habits, schedule activities, and reclaim your peace.</p>
+        </header>
+
+        <div class="motivation-section">
+            <h3>💡 Today's Reminder</h3>
+            <p id="dailyMessage">Overthinking is like a rocking chair—it gives you something to do, but it doesn't get you anywhere. Let's change that today!</p>
+        </div>
+
+        <div class="main-grid">
+            <!-- Add Activity Section -->
+            <div class="card">
+                <h2><span class="icon">🎯</span> Add a Hobby/Activity</h2>
+                <p style="color: #718096; margin-bottom: 15px; font-size: 0.95rem;">What helps you stop overthinking?</p>
+                
+                <div class="input-group">
+                    <input 
+                        type="text" 
+                        id="activityInput" 
+                        placeholder="e.g., Reading, Jogging, Gaming, Painting..."
+                        maxlength="50"
+                    >
+                </div>
+
+                <div class="input-group">
+                    <select id="frequencySelect">
+                        <option value="">Select frequency</option>
+                        <option value="Daily">Daily</option>
+                        <option value="3x/Week">3 times a week</option>
+                        <option value="Weekly">Weekly</option>
+                    </select>
+                    <button onclick="addActivity()">Add</button>
+                </div>
+
+                <p style="font-size: 0.9rem; color: #718096; margin-bottom: 15px;">Quick suggestions:</p>
+                <div class="suggestions">
+                    <button class="suggestion-btn" onclick="quickAdd('Reading')">📚 Reading</button>
+                    <button class="suggestion-btn" onclick="quickAdd('Walking')">🚶 Walking</button>
+                    <button class="suggestion-btn" onclick="quickAdd('Meditation')">🧘 Meditation</button>
+                    <button class="suggestion-btn" onclick="quickAdd('Drawing')">🎨 Drawing</button>
+                    <button class="suggestion-btn" onclick="quickAdd('Music')">🎵 Music</button>
+                    <button class="suggestion-btn" onclick="quickAdd('Cooking')">🍳 Cooking</button>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-box">
+                        <div class="stat-number" id="totalActivities">0</div>
+                        <div class="stat-label">Total Activities</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="completedToday">0</div>
+                        <div class="stat-label">Completed Today</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activities List -->
+            <div class="card">
+                <h2><span class="icon">✨</span> Your Activities</h2>
+                <div id="activityList">
+                    <div class="empty-state">
+                        <p>No activities yet. Add one to get started! 👆</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Set Reminders -->
+            <div class="card">
+                <h2><span class="icon">⏰</span> Set Reminders</h2>
+                <p style="color: #718096; margin-bottom: 15px; font-size: 0.95rem;">Get nudged when you need it most</p>
+                
+                <div class="input-group">
+                    <input 
+                        type="time" 
+                        id="reminderTime"
+                    >
+                    <button onclick="addReminder()">Set</button>
+                </div>
+
+                <div class="input-group">
+                    <input 
+                        type="text" 
+                        id="reminderMessage" 
+                        placeholder="e.g., Time for a break! Go read something..."
+                        maxlength="60"
+                    >
+                </div>
+
+                <div class="input-group">
+                    <select id="reminderFrequency">
+                        <option value="">Reminder frequency</option>
+                        <option value="Once">Once</option>
+                        <option value="Daily">Every Day</option>
+                        <option value="Weekdays">Weekdays Only</option>
+                    </select>
+                </div>
+
+                <p style="font-size: 0.9rem; color: #718096; margin-bottom: 15px;">Quick reminders:</p>
+                <div class="suggestions">
+                    <button class="suggestion-btn" onclick="quickReminder('09:00', 'Morning motivation!')">🌅 Morning</button>
+                    <button class="suggestion-btn" onclick="quickReminder('12:30', 'Lunch break—do something fun!')">🌤️ Noon</button>
+                    <button class="suggestion-btn" onclick="quickReminder('18:00', 'Wind down time!')">🌆 Evening</button>
+                    <button class="suggestion-btn" onclick="quickReminder('21:00', 'Relax before bed!')">🌙 Night</button>
+                </div>
+            </div>
+
+            <!-- Reminders List -->
+            <div class="card">
+                <h2><span class="icon">📋</span> Upcoming Reminders</h2>
+                <div id="reminderList">
+                    <div class="empty-state">
+                        <p>No reminders set. Add one to stay on track! 👆</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API configuration
+        const API_BASE = '/api';
+        const userId = 'user_' + Math.random().toString(36).substr(2, 9);
+        
+        let appData = {
+            activities: [],
+            reminders: [],
+            completedToday: []
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            checkReminders();
+            setInterval(checkReminders, 60000); // Check every minute
+            rotateMotivationalMessage();
+            setInterval(rotateMotivationalMessage, 30000); // Every 30 seconds
+        });
+
+        // Motivational messages
+        const motivationalMessages = [
+            "Overthinking is like a rocking chair—it gives you something to do, but it doesn't get you anywhere. Let's change that today!",
+            "Your hobby is waiting for you. Take a break from your thoughts and dive into something you love.",
+            "Progress, not perfection. Every moment you spend on a hobby is a moment well spent.",
+            "You can't control every outcome. But you can control how you spend your time right now.",
+            "Anxiety loves silence. Fill your day with activities that bring you joy and peace.",
+            "Your mind deserves a break. Give it something fun to focus on."
+        ];
+
+        function rotateMotivationalMessage() {
+            const msg = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
+            document.getElementById('dailyMessage').textContent = msg;
+        }
+
+        // Load data from server
+        async function loadData() {
+            try {
+                const response = await fetch(`${API_BASE}/user/${userId}/data`);
+                appData = await response.json();
+                renderActivities();
+                renderReminders();
+                updateStats();
+            } catch (error) {
+                console.error('Failed to load data:', error);
+                showNotification('Connection error. Using local mode.', '#fc8181');
+            }
+        }
+
+        // Save data to server (automatic via API calls)
+        function saveData() {
+            // Data is saved via individual API calls
+        }
+
+        // Add activity
+        async function addActivity() {
+            const input = document.getElementById('activityInput');
+            const frequency = document.getElementById('frequencySelect');
+            const activity = input.value.trim();
+
+            if (!activity) {
+                showNotification('Please enter an activity', '#fc8181');
+                return;
+            }
+            if (!frequency.value) {
+                showNotification('Please select a frequency', '#fc8181');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/user/${userId}/activities`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: activity, frequency: frequency.value })
+                });
+
+                if (!response.ok) throw new Error('Failed to add activity');
+
+                appData.activities.push(await response.json());
+                renderActivities();
+                updateStats();
+                input.value = '';
+                frequency.value = '';
+                showNotification('Activity added! 🎉', '#48bb78');
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Failed to add activity', '#fc8181');
+            }
+        }
+
+        // Quick add activity
+        function quickAdd(activity) {
+            document.getElementById('activityInput').value = activity;
+            document.getElementById('frequencySelect').value = 'Daily';
+        }
+
+        // Delete activity
+        async function deleteActivity(id) {
+            try {
+                const response = await fetch(`${API_BASE}/user/${userId}/activities/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) throw new Error('Failed to delete activity');
+
+                appData.activities = appData.activities.filter(a => a.id !== id);
+                renderActivities();
+                updateStats();
+                showNotification('Activity removed', '#fc8181');
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Failed to delete activity', '#fc8181');
+            }
+        }
+
+        // Mark activity as completed
+        async function completeActivity(id, name) {
+            if (!appData.completedToday.includes(id)) {
+                try {
+                    const response = await fetch(`${API_BASE}/user/${userId}/activities/${id}/complete`, {
+                        method: 'POST'
+                    });
+
+                    if (!response.ok) throw new Error('Failed to complete activity');
+
+                    appData.completedToday.push(id);
+                    updateStats();
+                    showNotification(`Great! You completed "${name}" 🌟`, '#48bb78');
+                    renderActivities();
+                } catch (error) {
+                    console.error('Error:', error);
+                    showNotification('Failed to complete activity', '#fc8181');
+                }
+            }
+        }
+
+        // Render activities
+        function renderActivities() {
+            const list = document.getElementById('activityList');
+            if (appData.activities.length === 0) {
+                list.innerHTML = '<div class="empty-state"><p>No activities yet. Add one to get started! 👆</p></div>';
+                return;
+            }
+
+            list.innerHTML = appData.activities.map(activity => `
+                <div class="activity-item">
+                    <div class="activity-content">
+                        <div class="activity-title">${activity.name}</div>
+                        <div class="activity-time">${activity.frequency}</div>
+                        <div class="activity-frequency">Added ${activity.createdAt}</div>
+                    </div>
+                    <button class="complete-btn" onclick="completeActivity(${activity.id}, '${activity.name}')">
+                        ${appData.completedToday.includes(activity.id) ? '✓ Done' : 'Complete'}
+                    </button>
+                    <button class="delete-btn" onclick="deleteActivity(${activity.id})">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        // Add reminder
+        async function addReminder() {
+            const time = document.getElementById('reminderTime').value;
+            const message = document.getElementById('reminderMessage').value.trim();
+            const frequency = document.getElementById('reminderFrequency').value;
+
+            if (!time) {
+                showNotification('Please set a time', '#fc8181');
+                return;
+            }
+            if (!message) {
+                showNotification('Please enter a reminder message', '#fc8181');
+                return;
+            }
+            if (!frequency) {
+                showNotification('Please select frequency', '#fc8181');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/user/${userId}/reminders`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ time, message, frequency })
+                });
+
+                if (!response.ok) throw new Error('Failed to add reminder');
+
+                appData.reminders.push(await response.json());
+                renderReminders();
+                document.getElementById('reminderTime').value = '';
+                document.getElementById('reminderMessage').value = '';
+                document.getElementById('reminderFrequency').value = '';
+                showNotification('Reminder set! 🔔', '#48bb78');
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Failed to add reminder', '#fc8181');
+            }
+        }
+
+        // Quick reminder
+        function quickReminder(time, message) {
+            document.getElementById('reminderTime').value = time;
+            document.getElementById('reminderMessage').value = message;
+            document.getElementById('reminderFrequency').value = 'Daily';
+        }
+
+        // Delete reminder
+        async function deleteReminder(id) {
+            try {
+                const response = await fetch(`${API_BASE}/user/${userId}/reminders/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) throw new Error('Failed to delete reminder');
+
+                appData.reminders = appData.reminders.filter(r => r.id !== id);
+                renderReminders();
+                showNotification('Reminder removed', '#fc8181');
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Failed to delete reminder', '#fc8181');
+            }
+        }
+
+        // Render reminders
+        function renderReminders() {
+            const list = document.getElementById('reminderList');
+            if (appData.reminders.length === 0) {
+                list.innerHTML = '<div class="empty-state"><p>No reminders set. Add one to stay on track! 👆</p></div>';
+                return;
+            }
+
+            list.innerHTML = appData.reminders.map(reminder => `
+                <div class="reminder-item">
+                    <div class="reminder-content">
+                        <div class="reminder-title">${reminder.message}</div>
+                        <div class="reminder-time">⏰ ${reminder.time} • ${reminder.frequency}</div>
+                    </div>
+                    <button class="delete-btn" onclick="deleteReminder(${reminder.id})">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        // Check if reminder should trigger
+        function checkReminders() {
+            const now = new Date();
+            const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+            const dayOfWeek = now.getDay();
+            const isWeekday = dayOfWeek !== 0 && dayOfWeek !== 6;
+
+            appData.reminders.forEach(reminder => {
+                if (reminder.time === currentTime) {
+                    // Check frequency
+                    let shouldNotify = false;
+                    if (reminder.frequency === 'Once') shouldNotify = true;
+                    if (reminder.frequency === 'Daily') shouldNotify = true;
+                    if (reminder.frequency === 'Weekdays' && isWeekday) shouldNotify = true;
+
+                    if (shouldNotify) {
+                        showNotification(reminder.message, '#3182ce');
+                        // Browser notification if permitted
+                        if ('Notification' in window && Notification.permission === 'granted') {
+                            new Notification('MindFlow Reminder', {
+                                body: reminder.message,
+                                icon: '🧠'
+                            });
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('totalActivities').textContent = appData.activities.length;
+            document.getElementById('completedToday').textContent = appData.completedToday.length;
+        }
+
+        // Show notification
+        function showNotification(message, bgColor = '#48bb78') {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            notification.style.background = bgColor;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideInRight 0.3s ease-out reverse';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Request notification permission
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+    </script>
+</body>
+</html>
